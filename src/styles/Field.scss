@@ -1,0 +1,97 @@
+@import 'centered.scss';
+
+@mixin markup {
+  border: 0.16em solid white;
+  position: absolute;
+}
+
+@mixin vertical-centered {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin centered-circle {
+  @include markup;
+  width: 12em;
+  height: 12em;
+  border-radius: 50%;
+  @include centered;
+  bottom: 50%;
+  transform: translateX(-50%) translateY(50%);
+}
+
+@mixin square {
+  @include markup;
+  @include vertical-centered;
+  width: 20em;
+  height: 26em;
+  border-radius: 10em;
+}
+
+.Field {
+  @include markup;
+  transform-style: preserve-3d;
+  width: 83em;
+  height: 40em;
+  background-color: green;
+  transform-origin: 50%;
+  transform: perspective(900px) rotate3d(1, 0, 0, 30deg);
+  margin-left: 13.76em;
+  padding-right: 3.76em;
+
+  .markup {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: green;
+    position: absolute;
+
+    .center-line {
+      position: absolute;
+      background-color: white;
+      width: 0.16em;
+      height: 100%;
+      @include centered;
+      bottom: 0;
+    }
+    .center-circle {
+      @include centered-circle;
+    }
+    .center-dot {
+      @include centered-circle;
+      width: 0.6em;
+      height: 0.6em;
+      background-color: white;
+    }
+    .left-square {
+      @include square;
+      left: -10.16em;
+    }
+
+    .right-square {
+      @include square;
+      left: calc(100% - 10.16em);
+    }
+  }
+
+  .left-goal {
+    @include markup;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%) rotateY(-57deg);
+    transform-origin: left;
+    width: 8em;
+    height: 6em;
+  }
+
+  .right-goal {
+    @include markup;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%) rotateY(-123deg);
+    transform-origin: left;
+    width: 8em;
+    height: 6em;
+    // background-image: url(sprites/goal.gif);
+  }
+}

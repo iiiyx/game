@@ -1,0 +1,33 @@
+.Ball {
+  background-image: url(sprites/ball.gif);
+  width: 1.8em;
+  height: 1.8em;
+  position: absolute;
+  transform: rotateX(-30deg) translateY(-50%);
+}
+
+.Ball.moving {
+  animation: rotate 0.5s linear infinite;
+}
+
+.Ball.moving.mirrored {
+  animation: rotate-mirrored 0.5s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateX(-30deg) translateY(-50%) rotateZ(0);
+  }
+  to {
+    transform: rotateX(-30deg) translateY(-50%) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-mirrored {
+  from {
+    transform: rotateX(-30deg) translateY(-50%) rotateZ(0);
+  }
+  to {
+    transform: rotateX(-30deg) translateY(-50%) rotateZ(-360deg);
+  }
+}

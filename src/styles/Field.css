@@ -1,0 +1,87 @@
+.Field {
+  border: 0.16em solid white;
+  position: absolute;
+  transform-style: preserve-3d;
+  width: 83em;
+  height: 40em;
+  background-color: green;
+  transform-origin: 50%;
+  transform: perspective(900px) rotate3d(1, 0, 0, 30deg);
+  margin-left: 13.76em;
+  padding-right: 3.76em; }
+  .Field .markup {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: green;
+    position: absolute; }
+    .Field .markup .center-line {
+      position: absolute;
+      background-color: white;
+      width: 0.16em;
+      height: 100%;
+      left: 50%;
+      bottom: 50%;
+      transform: translateX(-50%);
+      bottom: 0; }
+    .Field .markup .center-circle {
+      border: 0.16em solid white;
+      position: absolute;
+      width: 12em;
+      height: 12em;
+      border-radius: 50%;
+      left: 50%;
+      bottom: 50%;
+      transform: translateX(-50%);
+      bottom: 50%;
+      transform: translateX(-50%) translateY(50%); }
+    .Field .markup .center-dot {
+      border: 0.16em solid white;
+      position: absolute;
+      width: 12em;
+      height: 12em;
+      border-radius: 50%;
+      left: 50%;
+      bottom: 50%;
+      transform: translateX(-50%);
+      bottom: 50%;
+      transform: translateX(-50%) translateY(50%);
+      width: 0.6em;
+      height: 0.6em;
+      background-color: white; }
+    .Field .markup .left-square {
+      border: 0.16em solid white;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20em;
+      height: 26em;
+      border-radius: 10em;
+      left: -10.16em; }
+    .Field .markup .right-square {
+      border: 0.16em solid white;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20em;
+      height: 26em;
+      border-radius: 10em;
+      left: calc(100% - 10.16em); }
+  .Field .left-goal {
+    border: 0.16em solid white;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%) rotateY(-57deg);
+    transform-origin: left;
+    width: 8em;
+    height: 6em; }
+  .Field .right-goal {
+    border: 0.16em solid white;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%) rotateY(-123deg);
+    transform-origin: left;
+    width: 8em;
+    height: 6em; }
