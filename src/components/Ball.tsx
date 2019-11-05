@@ -1,36 +1,42 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 
-import { StateType } from '../types/state';
-import { PlayerType } from '../types/player';
-import { PositionType } from '../types/position';
+import { StateType } from '../models/state';
+import { PlayerType } from '../models/player';
+import { getFieldSize } from '../utils/field';
+import { initBall } from '../actions/ball';
+import { PositionType } from '../models/position';
+import { BALL_SIZE } from '../constants';
 
-import '../styles/Ball.css';
+import '../styles/Ball.scss';
 
-const BALL_DX = 16,
-  BALL_DY = 42;
+type PropsType = ConnectedStateType & ConnectedPropsType;
 
-class Ball extends Component<ConnectedStateType> {
+class BallComponent extends Component<PropsType> {
+  private xMax = 0;
+  private yMax = 0;
+  private ballRef = React.createRef<HTMLDivElement>();
+
+  componentDidMount(): void {
+    this.setSizes();
+    const ballHalf = BALL_SIZE / 2;
+    this.props.initBall({
+      left: this.xMax / 2 - ballHalf,
+      top: this.yMax / 2 - ballHalf,
+    });
+  }
+
+  private setSizes = (): void => {
+    const { xMax, yMax } = getFieldSize();
+    this.xMax = xMax;
+    this.yMax = yMax;
+  };
+
   private isMoving(): boolean {
     return (
       (this.props.owner && this.props.owner.isMoving) ||
       this.props.ball.isKicked
     );
-  }
-
-  private getPosition(): PositionType {
-    let left = 0;
-    let top = 0;
-
-    if (this.props.owner) {
-      const sign = this.props.owner.isMirrored ? -1 : 1;
-      left = this.props.owner.left + sign * BALL_DX;
-      top = this.props.owner.top + BALL_DY;
-    }
-    return {
-      left,
-      top,
-    };
   }
 
   render(): ReactNode {
@@ -39,13 +45,19 @@ class Ball extends Component<ConnectedStateType> {
       classes.push('moving');
     }
 
-    if (this.props.owner && this.props.owner.isMirrored) {
+    if (this.props.ball.isMirrored) {
       classes.push('mirrored');
     }
 
-    const position = this.getPosition();
+    const { left, top } = this.props.ball;
 
-    return <div className={classes.join(' ')} style={position} />;
+    return (
+      <div
+        ref={this.ballRef}
+        className={classes.join(' ')}
+        style={{ left, top }}
+      />
+    );
   }
 }
 
@@ -61,4 +73,15 @@ function mapStateToProps(state: StateType): ConnectedStateType {
   };
 }
 
-export default connect(mapStateToProps)(Ball);
+interface ConnectedPropsType {
+  initBall: (position: PositionType) => void;
+}
+
+const mapDispatchToProps = {
+  initBall,
+};
+
+export const Ball = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BallComponent);

@@ -1,9 +1,9 @@
 #kunio {
   background-image: url(sprites/kunio.gif);
-}
 
-#kunio.moving {
-  animation: moving 0.5s linear infinite;
+  &.moving {
+    animation: moving 0.5s linear infinite;
+  }
 }
 
 @keyframes moving {

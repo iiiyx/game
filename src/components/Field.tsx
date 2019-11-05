@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Player from './Player';
+import { Player } from './Player';
+import { Ball } from './Ball';
 // import Ghost from './Ghost';
-import Ball from './Ball';
 
-import '../styles/Field.css';
+import '../styles/Field.scss';
 
 export const Field: React.FC = () => {
   return (

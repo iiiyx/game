@@ -1,9 +1,10 @@
-import { PlayerType } from '../types/player';
-import { PositionType } from '../types/position';
+import { PlayerType } from '../models/player';
+import { PositionType } from '../models/position';
 
 export enum PlayerActionTypes {
   MOVE_PLAYER = 'MOVE_PLAYER',
   STOP_PLAYER = 'STOP_PLAYER',
+  SET_PLAYER_SIZE = 'SET_PLAYER_SIZE',
 }
 
 export interface MovePlayerActionType {

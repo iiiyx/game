@@ -1,16 +1,15 @@
 .Player {
   transform-style: preserve-3d;
   position: absolute;
-  transform-origin: bottom;
-  transform: rotateX(-30deg) translateX(-50%);
+  transform: rotateX(-30deg) translateZ(28px);
   background-repeat: no-repeat;
-  width: 3.6em;
-  height: 3.6em;
+  width: 56px;
+  height: 56px;
   bottom: 50%;
   left: calc(50% - 32px);
   background-size: contain;
 
   &.mirrored {
-    transform: rotateX(-30deg) rotateY(180deg) translateX(0);
+    transform: scaleX(-1) rotateX(-30deg) translateZ(28px);
   }
 }

@@ -1,8 +1,7 @@
 @import 'centered.scss';
 
 @mixin markup {
-  border: 0.16em solid white;
-  position: absolute;
+  border: 2px solid white;
 }
 
 @mixin vertical-centered {
@@ -12,8 +11,9 @@
 
 @mixin centered-circle {
   @include markup;
-  width: 12em;
-  height: 12em;
+  position: absolute;
+  width: 144px;
+  height: 144px;
   border-radius: 50%;
   @include centered;
   bottom: 50%;
@@ -23,33 +23,31 @@
 @mixin square {
   @include markup;
   @include vertical-centered;
-  width: 20em;
-  height: 26em;
-  border-radius: 10em;
+  position: absolute;
+  width: 120px;
+  height: 312px;
 }
 
 .Field {
   @include markup;
   transform-style: preserve-3d;
-  width: 83em;
-  height: 40em;
+  width: 996px;
+  height: 480px;
   background-color: green;
-  transform-origin: 50%;
+  position: relative;
+  transform-origin: bottom;
   transform: perspective(900px) rotate3d(1, 0, 0, 30deg);
-  margin-left: 13.76em;
-  padding-right: 3.76em;
 
   .markup {
     width: 100%;
     height: 100%;
-    overflow: hidden;
     background-color: green;
-    position: absolute;
+    position: relative;
 
     .center-line {
       position: absolute;
       background-color: white;
-      width: 0.16em;
+      width: 2px;
       height: 100%;
       @include centered;
       bottom: 0;
@@ -59,39 +57,43 @@
     }
     .center-dot {
       @include centered-circle;
-      width: 0.6em;
-      height: 0.6em;
+      width: 7px;
+      height: 7px;
       background-color: white;
     }
     .left-square {
       @include square;
-      left: -10.16em;
+      left: -2px;
+      border-radius: 0 120px 120px 0;
     }
 
     .right-square {
       @include square;
-      left: calc(100% - 10.16em);
+      left: calc(100% - 122px);
+      border-radius: 120px 0 0 120px;
     }
   }
 
   .left-goal {
     @include markup;
+    position: absolute;
     top: 50%;
-    left: 0;
-    transform: translateY(-50%) rotateY(-57deg);
-    transform-origin: left;
-    width: 8em;
-    height: 6em;
+    left: -2px;
+    transform: translateY(-50%);// rotateY(-57deg);
+    //transform-origin: left;
+    width: 74px;
+    height: 140px;
   }
 
   .right-goal {
     @include markup;
+    position: absolute;
     top: 50%;
-    left: 100%;
-    transform: translateY(-50%) rotateY(-123deg);
-    transform-origin: left;
-    width: 8em;
-    height: 6em;
-    // background-image: url(sprites/goal.gif);
+    right: -2px;
+    transform: translateY(-50%);// rotateY(-123deg);
+    //transform-origin: left;
+    width: 74px;
+    height: 140px;
+    //background-image: url(sprites/goal.gif);
   }
 }

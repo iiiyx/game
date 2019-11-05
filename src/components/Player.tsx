@@ -1,58 +1,49 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
-import { changeOwner, movePlayer, stopPlayer } from '../actions';
 
-import '../styles/Player.css';
-import '../styles/kunio.css';
-import { PlayerType } from '../types/player';
-import { StateType } from '../types/state';
-import { PositionType } from '../types/position';
-import { BallType } from '../types/ball';
+import { changeOwner, kick, moveBallByPlayer } from '../actions/ball';
+import { movePlayer, stopPlayer } from '../actions/players';
+import { PlayerType } from '../models/player';
+import { StateType } from '../models/state';
+import { BallType } from '../models/ball';
+import { DirectionMatrixType } from '../models/direction-matrix';
+import { KeyCodesEnum } from '../models/key-codes-enum';
+import {
+  checkOwnerShip,
+  getBallPositionByPlayer,
+  getDtWithDirection,
+  isMoving,
+} from '../utils/movements';
+import { getFieldSize } from '../utils/field';
+import { PositionType } from '../models/position';
 
-enum keyCodes {
-  ARROW_UP = 'ArrowUp',
-  ARROW_DOWN = 'ArrowDown',
-  ARROW_LEFT = 'ArrowLeft',
-  ARROW_RIGHT = 'ArrowRight',
-}
-
-const gap = 1.8 * 16;
+import '../styles/Player.scss';
+import '../styles/kunio.scss';
+import { PLAYER_SPEED } from '../constants';
 
 interface OwnPropsType {
   playerName: PlayerType['id'];
 }
 
-interface ConnectedPropsType {
-  player: PlayerType;
-  stopPlayer: (id: PlayerType['id']) => void;
-  changeOwner: (id: PlayerType['id']) => void;
-  movePlayer: (
-    playerName: OwnPropsType['playerName'],
-    dt: PositionType,
-    isMirrored: boolean,
-  ) => void;
-}
+type PropsType = OwnPropsType & ConnectedStateType & ConnectedPropsType;
 
-type PropsType = OwnPropsType & ConnectedPropsType;
-
-class Player extends Component<PropsType> {
-  private pressed: {
-    [key: string]: boolean;
-  } = {
-    [keyCodes.ARROW_UP]: false,
-    [keyCodes.ARROW_DOWN]: false,
-    [keyCodes.ARROW_LEFT]: false,
-    [keyCodes.ARROW_RIGHT]: false,
+class PlayerComponent extends Component<PropsType> {
+  private directionMatrix: DirectionMatrixType = {
+    [KeyCodesEnum.ARROW_UP]: false,
+    [KeyCodesEnum.ARROW_DOWN]: false,
+    [KeyCodesEnum.ARROW_LEFT]: false,
+    [KeyCodesEnum.ARROW_RIGHT]: false,
   };
   private lastTime: number | undefined;
-  private maxX = 0;
-  private maxY = 0;
+  private xMax = 0;
+  private yMax = 0;
+  private playerRef = React.createRef<HTMLDivElement>();
 
   componentDidMount(): void {
     this.setSizes();
     window.addEventListener('keydown', this.onKeyDown);
     window.addEventListener('keyup', this.onKeyUp);
-    this.props.changeOwner(this.props.playerName);
+    // this.props.changeOwner(this.props.playerName);
     this.checkMove();
   }
 
@@ -61,36 +52,47 @@ class Player extends Component<PropsType> {
     window.removeEventListener('keyup', this.onKeyUp);
   }
 
+  componentDidUpdate(prevProps: Readonly<PropsType>): void {
+    if (
+      prevProps.player.left !== this.props.player.left ||
+      prevProps.player.top !== this.props.player.top
+    ) {
+      if (checkOwnerShip(this.props.player, this.props.ball)) {
+        this.props.changeOwner(this.props.playerName);
+      }
+    }
+  }
+
   private onKeyDown = (e: KeyboardEvent): void => {
     if (e.altKey || e.shiftKey || e.ctrlKey || e.metaKey) {
       return;
     }
 
-    if (e.code === 'ArrowLeft') {
-      // kick
-    }
-
-    if (this.pressed[e.code] === undefined) {
+    if (e.code === 'Space') {
+      this.startKick();
       return;
     }
 
-    this.pressed[e.code] = true;
+    if (this.directionMatrix[e.code as KeyCodesEnum] === undefined) {
+      return;
+    }
+
+    this.directionMatrix[e.code as KeyCodesEnum] = true;
   };
 
-  private isMoving = (): boolean =>
-    this.pressed[keyCodes.ARROW_LEFT] ||
-    this.pressed[keyCodes.ARROW_UP] ||
-    this.pressed[keyCodes.ARROW_RIGHT] ||
-    this.pressed[keyCodes.ARROW_DOWN];
-
   private onKeyUp = (e: KeyboardEvent): void => {
-    if (this.pressed[e.code] === undefined) {
+    if (e.code === 'Space') {
+      this.endKick();
       return;
     }
 
-    this.pressed[e.code] = false;
+    if (this.directionMatrix[e.code as KeyCodesEnum] === undefined) {
+      return;
+    }
 
-    if (!this.isMoving()) {
+    this.directionMatrix[e.code as KeyCodesEnum] = false;
+
+    if (!isMoving(this.directionMatrix)) {
       this.stop();
     }
   };
@@ -101,7 +103,7 @@ class Player extends Component<PropsType> {
   };
 
   private checkMove = (): void => {
-    if (!this.isMoving()) {
+    if (!isMoving(this.directionMatrix)) {
       requestAnimationFrame(this.checkMove);
       return;
     }
@@ -112,60 +114,45 @@ class Player extends Component<PropsType> {
 
     const now = performance.now();
     const dur = now - this.lastTime;
-    const dist = (133 * dur) / 1000;
 
     const player = this.props.player;
 
-    const dt = {
-      top: 0,
-      left: 0,
-    };
-
-    let isMirrored = player.isMirrored;
-
-    if (this.pressed[keyCodes.ARROW_UP]) {
-      const next = player.top - dist;
-      if (next >= 0 - gap * 2) {
-        dt.top = -dist;
-      }
-    }
-    if (this.pressed[keyCodes.ARROW_DOWN]) {
-      const next = player.top + dist;
-      if (next <= this.maxY) {
-        dt.top = dist;
-      }
-    }
-    if (this.pressed[keyCodes.ARROW_RIGHT]) {
-      isMirrored = false;
-      const next = player.left + dist;
-      if (next <= this.maxX) {
-        dt.left = dist;
-      }
-    }
-    if (this.pressed[keyCodes.ARROW_LEFT]) {
-      isMirrored = true;
-      const next = player.left - dist;
-      if (next >= 0 - gap / 2) {
-        dt.left = -dist;
-      }
-    }
+    const { dt, isMirrored } = getDtWithDirection({
+      currentPosition: player,
+      isCurrentlyMirrored: player.isMirrored,
+      duration: dur,
+      speed: PLAYER_SPEED,
+      directionMatrix: this.directionMatrix,
+      xMax: this.xMax,
+      yMax: this.yMax,
+    });
 
     this.props.movePlayer(this.props.playerName, dt, isMirrored);
+    if (this.props.playerName === this.props.ball.owner) {
+      const ballPosition = getBallPositionByPlayer(this.props.player);
+      this.props.moveBallByPlayer(ballPosition, isMirrored);
+    }
     this.lastTime = now;
     requestAnimationFrame(this.checkMove);
   };
 
   private setSizes = (): void => {
-    const field = document.getElementById('field');
-    if (field) {
-      this.maxX = field.clientWidth - gap / 2;
-      this.maxY = field.clientHeight - gap * 2;
-    }
+    const { xMax, yMax } = getFieldSize();
+    this.xMax = xMax;
+    this.yMax = yMax;
   };
+
+  private startKick(): void {
+    // accumulatePower
+  }
+
+  private endKick(): void {
+    this.props.kick(/* accumulated power */);
+  }
 
   render(): ReactNode {
     const classes = ['Player'];
-    if (this.isMoving()) {
+    if (isMoving(this.directionMatrix)) {
       classes.push('moving');
     }
 
@@ -175,6 +162,7 @@ class Player extends Component<PropsType> {
 
     return (
       <div
+        ref={this.playerRef}
         className={classes.join(' ')}
         id={this.props.playerName}
         style={{
@@ -201,13 +189,27 @@ function mapStateToProps(
   };
 }
 
+interface ConnectedPropsType {
+  stopPlayer: (id: PlayerType['id']) => void;
+  changeOwner: (id: PlayerType['id']) => void;
+  kick: () => void;
+  moveBallByPlayer: (newPosition: PositionType, isMirrored: boolean) => void;
+  movePlayer: (
+    playerName: OwnPropsType['playerName'],
+    dt: PositionType,
+    isMirrored: boolean,
+  ) => void;
+}
+
 const mapDispatchToProps = {
   movePlayer,
   stopPlayer,
   changeOwner,
+  kick,
+  moveBallByPlayer,
 };
 
-export default connect(
+export const Player = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Player);
+)(PlayerComponent);

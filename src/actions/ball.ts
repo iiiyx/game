@@ -1,10 +1,12 @@
-import { PlayerType } from '../types/player';
-import { PositionType } from '../types/position';
+import { PlayerType } from '../models/player';
+import { PositionType } from '../models/position';
 
 export enum BallActionTypes {
+  INIT_BALL = 'INIT_BALL',
+  SET_BALL_SIZE = 'SET_BALL_SIZE',
   KICK = 'KICK',
   CHANGE_OWNER = 'CHANGE_OWNER',
-  MOVE_BALL = 'MOVE_BALL',
+  MOVE_BALL_BY_PLAYER = 'MOVE_BALL',
 }
 
 export interface KickActionType {
@@ -34,25 +36,38 @@ export function changeOwner(id: PlayerType['id']): ChangeOwnerActionType {
 }
 
 export interface MoveBallActionType {
-  type: BallActionTypes.MOVE_BALL;
+  type: BallActionTypes.MOVE_BALL_BY_PLAYER;
   payload: {
-    id: PlayerType['id'];
-    dt: PositionType;
+    newPosition: PositionType;
     isMirrored: boolean;
   };
 }
 
-export function moveBall(
-  id: PlayerType['id'],
-  dt: PositionType,
+export function moveBallByPlayer(
+  newPosition: PositionType,
   isMirrored: boolean,
 ): MoveBallActionType {
   return {
-    type: BallActionTypes.MOVE_BALL,
+    type: BallActionTypes.MOVE_BALL_BY_PLAYER,
     payload: {
-      id,
-      dt,
+      newPosition,
       isMirrored,
+    },
+  };
+}
+
+export interface InitBallActionType {
+  type: BallActionTypes.INIT_BALL;
+  payload: {
+    position: PositionType;
+  };
+}
+
+export function initBall(position: PositionType): InitBallActionType {
+  return {
+    type: BallActionTypes.INIT_BALL,
+    payload: {
+      position,
     },
   };
 }

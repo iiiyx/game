@@ -1,5 +1,5 @@
-import { PositionType } from './position';
 import { PlayerType } from './player';
+import { PositionType } from './position';
 
 export interface BallType extends PositionType {
   isKicked: boolean;

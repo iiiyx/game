@@ -1,6 +1,9 @@
-import { PlayerActionTypes } from '../actions';
-import { StateType } from '../types/state';
-import { MovePlayerActionType, StopPlayerActionType } from '../actions/players';
+import {
+  MovePlayerActionType,
+  PlayerActionTypes,
+  StopPlayerActionType,
+} from '../actions/players';
+import { StateType } from '../models/state';
 
 const initialState = {
   kunio: {
