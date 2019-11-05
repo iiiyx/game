@@ -1,4 +1,4 @@
-import { PositionType } from './position';
+import { PositionType } from './position-type';
 
 export interface PlayerType extends PositionType {
   id: string;

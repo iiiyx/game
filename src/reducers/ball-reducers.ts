@@ -1,11 +1,11 @@
-import { StateType } from '../models/state';
+import { StateType } from '../models/state-type';
 import {
   BallActionTypes,
   ChangeOwnerActionType,
   InitBallActionType,
   KickActionType,
   MoveBallActionType,
-} from '../actions/ball';
+} from '../actions/ball-actions';
 
 const initialState = {
   left: 0,

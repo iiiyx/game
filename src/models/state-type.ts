@@ -1,5 +1,5 @@
-import { PlayerType } from './player';
-import { BallType } from './ball';
+import { PlayerType } from './player-type';
+import { BallType } from './ball-type';
 
 export interface StateType {
   players: {

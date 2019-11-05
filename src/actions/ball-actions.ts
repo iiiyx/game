@@ -1,5 +1,5 @@
-import { PlayerType } from '../models/player';
-import { PositionType } from '../models/position';
+import { PlayerType } from '../models/player-type';
+import { PositionType } from '../models/position-type';
 
 export enum BallActionTypes {
   INIT_BALL = 'INIT_BALL',

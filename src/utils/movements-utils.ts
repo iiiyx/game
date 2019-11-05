@@ -1,8 +1,8 @@
-import { DirectionMatrixType } from '../models/direction-matrix';
+import { DirectionMatrixType } from '../models/direction-matrix-type';
 import { KeyCodesEnum } from '../models/key-codes-enum';
-import { PlayerType } from '../models/player';
-import { BallType } from '../models/ball';
-import { PositionType } from '../models/position';
+import { PlayerType } from '../models/player-type';
+import { BallType } from '../models/ball-type';
+import { PositionType } from '../models/position-type';
 import {
   BALL_SIZE,
   FIELD_BOTTOM_GAP,

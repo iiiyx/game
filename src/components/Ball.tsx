@@ -1,12 +1,12 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 
-import { StateType } from '../models/state';
-import { PlayerType } from '../models/player';
-import { getFieldSize } from '../utils/field';
-import { initBall } from '../actions/ball';
-import { PositionType } from '../models/position';
+import { initBall } from '../actions/ball-actions';
 import { BALL_SIZE } from '../constants';
+import { StateType } from '../models/state-type';
+import { PlayerType } from '../models/player-type';
+import { PositionType } from '../models/position-type';
+import { getFieldSize } from '../utils/field-utils';
 
 import '../styles/Ball.scss';
 
@@ -15,7 +15,6 @@ type PropsType = ConnectedStateType & ConnectedPropsType;
 class BallComponent extends Component<PropsType> {
   private xMax = 0;
   private yMax = 0;
-  private ballRef = React.createRef<HTMLDivElement>();
 
   componentDidMount(): void {
     this.setSizes();
@@ -51,13 +50,7 @@ class BallComponent extends Component<PropsType> {
 
     const { left, top } = this.props.ball;
 
-    return (
-      <div
-        ref={this.ballRef}
-        className={classes.join(' ')}
-        style={{ left, top }}
-      />
-    );
+    return <div className={classes.join(' ')} style={{ left, top }} />;
   }
 }
 

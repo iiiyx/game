@@ -1,25 +1,25 @@
 import React, { Component, ReactNode } from 'react';
 import { connect } from 'react-redux';
 
-import { changeOwner, kick, moveBallByPlayer } from '../actions/ball';
-import { movePlayer, stopPlayer } from '../actions/players';
-import { PlayerType } from '../models/player';
-import { StateType } from '../models/state';
-import { BallType } from '../models/ball';
-import { DirectionMatrixType } from '../models/direction-matrix';
+import { changeOwner, kick, moveBallByPlayer } from '../actions/ball-actions';
+import { movePlayer, stopPlayer } from '../actions/players-actions';
+import { PlayerType } from '../models/player-type';
+import { StateType } from '../models/state-type';
+import { BallType } from '../models/ball-type';
+import { DirectionMatrixType } from '../models/direction-matrix-type';
 import { KeyCodesEnum } from '../models/key-codes-enum';
+import { PositionType } from '../models/position-type';
+import { PLAYER_SPEED } from '../constants';
 import {
   checkOwnerShip,
   getBallPositionByPlayer,
   getDtWithDirection,
   isMoving,
-} from '../utils/movements';
-import { getFieldSize } from '../utils/field';
-import { PositionType } from '../models/position';
+} from '../utils/movements-utils';
+import { getFieldSize } from '../utils/field-utils';
 
 import '../styles/Player.scss';
 import '../styles/kunio.scss';
-import { PLAYER_SPEED } from '../constants';
 
 interface OwnPropsType {
   playerName: PlayerType['id'];
@@ -37,7 +37,6 @@ class PlayerComponent extends Component<PropsType> {
   private lastTime: number | undefined;
   private xMax = 0;
   private yMax = 0;
-  private playerRef = React.createRef<HTMLDivElement>();
 
   componentDidMount(): void {
     this.setSizes();
@@ -162,7 +161,6 @@ class PlayerComponent extends Component<PropsType> {
 
     return (
       <div
-        ref={this.playerRef}
         className={classes.join(' ')}
         id={this.props.playerName}
         style={{
