@@ -182,6 +182,7 @@ function mapStateToProps(
   ownProps: OwnPropsType,
 ): ConnectedStateType {
   return {
+    // TODO: user Reselect lib
     player: state.players[ownProps.playerName],
     ball: state.ball,
   };

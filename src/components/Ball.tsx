@@ -62,6 +62,7 @@ interface ConnectedStateType {
 function mapStateToProps(state: StateType): ConnectedStateType {
   return {
     ball: state.ball,
+    // TODO: use Reselect lib
     owner: state.ball.owner ? state.players[state.ball.owner] : undefined,
   };
 }
